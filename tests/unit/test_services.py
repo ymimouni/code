@@ -1,5 +1,7 @@
 from unittest import mock
+
 import pytest
+
 from allocation.adapters import repository
 from allocation.service_layer import services, unit_of_work
 
@@ -28,7 +30,6 @@ class FakeUnitOfWork(unit_of_work.AbstractUnitOfWork):
 
     def rollback(self):
         pass
-
 
 
 def test_add_batch_for_new_product():
