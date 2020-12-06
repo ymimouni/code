@@ -1,4 +1,5 @@
 from typing import List, Dict, Callable, Type
+
 from allocation.adapters import email
 from allocation.domain import events
 

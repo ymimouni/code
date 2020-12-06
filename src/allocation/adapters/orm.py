@@ -6,7 +6,6 @@ from sqlalchemy.orm import mapper, relationship
 
 from allocation.domain import model
 
-
 metadata = MetaData()
 
 order_lines = Table(
@@ -53,7 +52,7 @@ def start_mappers():
         'batches': relationship(batches_mapper)
     })
 
+
 @event.listens_for(model.Product, 'load')
 def receive_load(product, _):
     product.events = []
-

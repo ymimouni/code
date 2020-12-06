@@ -1,5 +1,6 @@
 import abc
 from typing import Set
+
 from allocation.domain import model
 
 
@@ -25,7 +26,6 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     def _get(self, sku) -> model.Product:
         raise NotImplementedError
-
 
 
 class SqlAlchemyRepository(AbstractRepository):

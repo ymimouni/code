@@ -1,7 +1,7 @@
 from datetime import datetime
+
 from flask import Flask, jsonify, request
 
-from allocation.domain import model
 from allocation.adapters import orm
 from allocation.service_layer import services, unit_of_work
 

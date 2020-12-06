@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import date
 from typing import Optional, List, Set
+
 from . import events
 
 
@@ -35,7 +37,7 @@ class OrderLine:
 
 class Batch:
     def __init__(
-        self, ref: str, sku: str, qty: int, eta: Optional[date]
+            self, ref: str, sku: str, qty: int, eta: Optional[date]
     ):
         self.reference = ref
         self.sku = sku
