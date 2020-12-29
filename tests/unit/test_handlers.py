@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from allocation.adapters import repository
-from allocation.domain import events, commands
+from allocation.domain import commands
 from allocation.service_layer import handlers, unit_of_work, messagebus
 
 

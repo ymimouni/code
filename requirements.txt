@@ -4,11 +4,9 @@ flask~=1.1.2
 psycopg2-binary
 
 # tests
-pytest~=6.1.2
+pytest
 pytest-icdiff
 mypy
 requests~=2.25.0
-
-
-setuptools~=50.3.2
-tenacity~=6.2.0
+tenacity
+redis
