@@ -42,9 +42,9 @@ def handle_event(
 
 
 def handle_command(
-    command: commands.Command,
-    queue: Deque[Message],
-    uow: unit_of_work.AbstractUnitOfWork
+        command: commands.Command,
+        queue: Deque[Message],
+        uow: unit_of_work.AbstractUnitOfWork
 ):
     logger.debug('handling command %s', command)
     try:
@@ -59,9 +59,15 @@ def handle_command(
 
 EVENT_HANDLERS = {
     events.OutOfStock: [handlers.send_out_of_stock_notification],
-    events.Allocated: [handlers.publish_allocated_event]
+    events.Allocated: [
+        handlers.publish_allocated_event,
+        handlers.add_allocation_to_read_model
+    ],
+    events.Deallocated: [
+        handlers.remove_allocation_from_read_model,
+        handlers.reallocate
+    ]
 }  # type: Dict[Type[events.Event], List[Callable]]
-
 
 COMMAND_HANDLERS = {
     commands.Allocate: handlers.allocate,

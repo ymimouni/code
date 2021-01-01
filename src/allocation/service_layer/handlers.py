@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import TYPE_CHECKING
 
 from allocation.domain import model, events, commands
@@ -35,9 +36,17 @@ def allocate(
         product = uow.products.get(sku=line.sku)
         if product is None:
             raise InvalidSku(f'Invalid sku {line.sku}')
-        batchref = product.allocate(line)
+        product.allocate(line)
         uow.commit()
-        return batchref
+
+
+def reallocate(
+        event: events.Deallocated, uow: unit_of_work.AbstractUnitOfWork
+):
+    with uow:
+        product = uow.products.get(sku=event.sku)
+        product.events.append(commands.Allocate(**asdict(event)))
+        uow.commit()
 
 
 def change_batch_quantity(
@@ -62,3 +71,27 @@ def publish_allocated_event(
         event: events.Allocated, uow: unit_of_work.AbstractUnitOfWork
 ):
     redis_eventpublisher.publish('line_allocated', event)
+
+
+def add_allocation_to_read_model(
+        event: events.Allocated, uow: unit_of_work.SqlAlchemyUnitOfWork,
+):
+    with uow:
+        uow.session.execute(
+            'INSERT INTO allocations_view (orderid, sku, batchref)'
+            ' VALUES (:orderid, :sku, :batchref)',
+            dict(orderid=event.orderid, sku=event.sku, batchref=event.batchref)
+        )
+        uow.commit()
+
+
+def remove_allocation_from_read_model(
+        event: events.Deallocated, uow: unit_of_work.SqlAlchemyUnitOfWork,
+):
+    with uow:
+        uow.session.execute(
+            'DELETE FROM allocations_view '
+            ' WHERE orderid = :orderid AND sku = :sku',
+            dict(orderid=event.orderid, sku=event.sku)
+        )
+        uow.commit()
