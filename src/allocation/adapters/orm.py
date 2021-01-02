@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy import (
     Table, MetaData, Column, Integer, String, Date, ForeignKey,
     event,
@@ -5,6 +7,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import mapper, relationship
 
 from allocation.domain import model
+
+logger = logging.getLogger(__name__)
 
 metadata = MetaData()
 
@@ -48,6 +52,7 @@ allocations_view = Table(
 
 
 def start_mappers():
+    logger.info("Starting mappers")
     lines_mapper = mapper(model.OrderLine, order_lines)
     batches_mapper = mapper(model.Batch, batches, properties={
         '_allocations': relationship(
